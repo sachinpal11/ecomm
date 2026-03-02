@@ -1,5 +1,6 @@
 const User = require("../model/user.model");
 const VerificationCodeSend = require("../services/VerificationCodeSend");
+const DecodeToken = require("../util/DecodeToken");
 const verificationToken = require("../util/verificationToken");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken")
@@ -118,7 +119,6 @@ const login = async (req, res) => {
 
     const comparePass = await bcrypt.compare(password, existedUser.password);
 
-    console.log(comparePass, existedUser.password, password);
 
     if (!comparePass) {
       return res.status(401).json({
@@ -152,6 +152,20 @@ const login = async (req, res) => {
 
 
 
+const me = async (req, res) => {
+
+  const { userId } = DecodeToken(req);
+
+  console.log(userId);
+
+  const user = await User.findById({ _id: userId }).select("-password -verificationCode -verifiicationCodeExpiry");
 
 
-module.exports = { signup, verifyMail, login }
+  return res.status(200).json({
+    message: "User Fetched successfully",
+    user
+  })
+}
+
+
+module.exports = { signup, verifyMail, login, me }

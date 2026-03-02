@@ -1,17 +1,16 @@
 const jwt = require("jsonwebtoken")
 
-const DecodeToken = async (req) => {
+const DecodeToken = (req) => {
   try {
     const { token } = req.cookies;
 
-    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    if (decoded) {
-
-    }
+    console.log(decoded)
+    return decoded;
 
   } catch (error) {
-
+    return null
   }
 
 
@@ -19,4 +18,4 @@ const DecodeToken = async (req) => {
 
 
 
-module.exports = DocodeToken;
+module.exports = DecodeToken;
