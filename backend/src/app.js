@@ -3,7 +3,7 @@ const dbConnect = require("./db/dbConnect");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const authRoute = require("./routes/auth.route")
-
+const productRoute = require("./routes/product.route")
 
 const app = express();
 app.use(cors({
@@ -23,6 +23,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", authRoute);
+app.use("/api/product", productRoute);
 
 
 module.exports = app;

@@ -151,6 +151,26 @@ const login = async (req, res) => {
 
 
 
+const logout = async (req, res) => {
+  try {
+
+    res.cookie("token", "", {
+      maxAge: new Date(0)
+    });
+
+    return res.json({
+      message: "logout successfully!"
+    })
+
+  } catch (error) {
+    return res.status(500).json({
+      message: "error in logout",
+      error
+    })
+  }
+}
+
+
 
 const me = async (req, res) => {
 
@@ -168,4 +188,7 @@ const me = async (req, res) => {
 }
 
 
-module.exports = { signup, verifyMail, login, me }
+
+
+
+module.exports = { signup, verifyMail, login, me, logout }
