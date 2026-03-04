@@ -10,15 +10,28 @@ const productSchema = new mongoose.Schema({
     type: String, required: true
   },
   price: {
-    type: String, required: true
+    type: Number, required: true
   },
-  discountPrice: String,
+  discountPrice: Number,
   category: {
-    type: String, required: true
+    type: String, required: true, enum: ["men", "women"]
   },
-  images: {
-    type: [String], required: true
+  frontImage: {
+    url: {
+      type: String
+    },
+    thumbnail: {
+      type: String
+    }
   },
+  images: [{
+    url: {
+      type: String
+    },
+    thumbnail: {
+      type: String
+    }
+  }],
   totalStock: {
     type: Number, required: true
   },
@@ -33,14 +46,20 @@ const productSchema = new mongoose.Schema({
         type: Number,
         required: true,
         min: 0
+      },
+      color: {
+        type: String,
+        required: true,
       }
     }
   ],
   rating: {
-    type: Number
+    type: Number,
+    default: 0
   },
   numReviews: {
-    type: Number
+    type: Number,
+    default: 0
   },
   featured: {
     type: Boolean,

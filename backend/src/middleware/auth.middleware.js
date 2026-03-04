@@ -11,8 +11,6 @@ const authMiddleware = async (req, res, next) => {
         message: "Unauthorized"
       })
     }
-
-    console.log("under auth middleware", decoded);
     next();
 
   } catch (err) {

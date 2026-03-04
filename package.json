@@ -1,5 +1,7 @@
 {
   "dependencies": {
-    "bcrypt": "^6.0.0"
+    "@imagekit/nodejs": "^7.3.0",
+    "bcrypt": "^6.0.0",
+    "multer": "^2.1.0"
   }
 }
