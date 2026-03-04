@@ -77,13 +77,13 @@ const createProduct = async (req, res) => {
       });
     }
 
+
     if (images.length < 2 || images.length > 4) {
       return res.status(400).json({
         message: "Please Only Select Images 2 to 4",
       });
     }
 
-    console.log(req.body);
 
     const parsedVariants = JSON.parse(req.body.variants);
 
@@ -112,4 +112,91 @@ const createProduct = async (req, res) => {
 }
 
 
-module.exports = { getProducts, getSingleProduct, createProduct }
+const updateProduct = async (req, res) => {
+  try {
+
+    const {
+      productId,
+      name,
+      description,
+      price,
+      discountPrice,
+      category,
+      totalStock
+    } = req.body;
+
+    const images = req.files;
+
+
+    let parsedVariants = [];
+    if (req.body.variants) {
+      parsedVariants = JSON.parse(req.body.variants);
+    }
+
+    let updateData = {
+      name,
+      description,
+      price,
+      discountPrice,
+      category,
+      totalStock,
+      variants: parsedVariants
+    };
+
+    if (images && images.length > 0) {
+      const uploadImages = await ImageStorage(images);
+      updateData.images = uploadImages;
+      updateData.frontImage = uploadImages[0];
+    }
+
+    const product = await Product.findOneAndUpdate(
+      { _id: productId },
+      updateData,
+      { new: true }
+    );
+
+    return res.json({
+      message: "Product updated successfully",
+      product
+    });
+
+  } catch (error) {
+
+    return res.status(500).json({
+      message: "Error in Updating Product!",
+      error: error.message
+    });
+
+  }
+};
+
+
+const deleteProduct = async (req, res) => {
+  try {
+    const { productId } = req.body;
+
+    const product = await Product.findByIdAndDelete(productId);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "Product not found"
+      });
+    }
+
+    return res.json({
+      message: "Product deleted successfully",
+      product
+    });
+
+  } catch (error) {
+
+    return res.status(500).json({
+      message: "Error deleting product",
+      error: error.message
+    });
+
+  }
+};
+
+
+module.exports = { getProducts, getSingleProduct, createProduct, updateProduct, deleteProduct }

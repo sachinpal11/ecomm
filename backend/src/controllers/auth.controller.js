@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken")
 
 const signup = async (req, res) => {
   try {
-    const { email, password, firstName, lastName } = req.body;
+    const { email, password, firstName, lastName, role } = req.body;
 
     if (!email || !password || !firstName) {
       return res.status(400).json({
@@ -33,7 +33,7 @@ const signup = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-      firstName, lastName, email, password: hashPassword, verificationCode: token, verifiicationCodeExpiry: expiry
+      firstName, lastName, email, password: hashPassword, verificationCode: token, verifiicationCodeExpiry: expiry, role
     })
 
     await newUser.save();
@@ -127,7 +127,7 @@ const login = async (req, res) => {
     }
 
 
-    const token = jwt.sign({ userId: existedUser._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ userId: existedUser._id, role: existedUser.role }, process.env.JWT_SECRET, {
       expiresIn: "30d"
     });
 
