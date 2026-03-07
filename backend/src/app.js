@@ -6,12 +6,12 @@ const authRoute = require("./routes/auth.route")
 const productRoute = require("./routes/product.route")
 
 const app = express();
+
 app.use(cors({
   origin: process.env.FRONTEND_URL,
   methods: ["GET", "POST", "DELETE", "PUT"],
   credentials: true
 }))
-
 
 app.use(express.json());
 app.use(cookieParser());

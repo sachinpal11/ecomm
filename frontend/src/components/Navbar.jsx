@@ -7,7 +7,6 @@ import { Handbag, Search, TextAlignJustify, X } from "lucide-react";
 function Navbar() {
   const isLogin = checkLogin();
   const [menuOpen, setMenuOpen] = useState(false);
-
   const NavUrl = [
     { title: "WOMEN", Url: "/women" },
     { title: "MEN", Url: "/men" },

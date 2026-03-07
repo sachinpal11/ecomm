@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 
 
 
-const htmlCode =(verificationLink)=>{
+const htmlCode = (verificationLink) => {
   return `
   <!DOCTYPE html>
 <html>
@@ -135,15 +135,15 @@ const VerificationCodeSend = async (token, email) => {
 
 
   try {
-    
-    const verifyUrl = `${process.env.FRONTEND_URL}/verify/${token}`;
-  
+
+    const verifyUrl = `${process.env.FRONTEND_URL}/verify-link/${token}`;
+
     const info = await transporter.sendMail({
       from: `"Flexora" <${process.env.NODEMAILER_USER}>`,
       to: email,
       subject: "Verification Link for Ecommerce Site Login",
-      text: "Verification Link for Ecommerce Site Login", 
-      html: htmlCode(verifyUrl), 
+      text: "Verification Link for Ecommerce Site Login",
+      html: htmlCode(verifyUrl),
     });
 
 
@@ -153,15 +153,15 @@ const VerificationCodeSend = async (token, email) => {
       messageID: info.messageId,
       status: 200
     }
-  }catch (error) {
-      return {
-        message: "email failed to send!",
-        status: 500,
-        error:error
-      }
+  } catch (error) {
+    return {
+      message: "email failed to send!",
+      status: 500,
+      error: error
     }
+  }
 
-  
+
 }
 
 

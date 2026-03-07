@@ -41,7 +41,13 @@ const signup = async (req, res) => {
 
     return res.status(201).json({
       message: "User Created Sucessfully!",
-      newUser
+      user: {
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+        role: newUser.role,
+        verified: newUser.verified
+      }
 
     })
   } catch (error) {
@@ -69,13 +75,22 @@ const verifyMail = async (req, res) => {
       });
     }
 
+
     existedUser.verified = true;
     existedUser.verificationToken = undefined;
     existedUser.verificationTokenExpires = undefined;
 
     await existedUser.save();
 
-    return res.json({ message: "Account verified successfully" });
+    return res.json({
+      message: "Account verified successfully", user: {
+        firstName: existedUser.firstName,
+        lastName: existedUser.lastName,
+        email: existedUser.email,
+        role: existedUser.role,
+        verified: true
+      }
+    });
 
 
   } catch (error) {
@@ -88,6 +103,53 @@ const verifyMail = async (req, res) => {
 
 }
 
+
+const resendMail = async (req, res) => {
+  try {
+
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found"
+      });
+    }
+
+    if (user.verified) {
+      return res.status(400).json({
+        message: "User already verified"
+      });
+    }
+
+    const { token, expiry } = verificationToken();
+
+    const tokenSendToMail = await VerificationCodeSend(token, email);
+
+    if (tokenSendToMail.status != 200) {
+      return res.status(500).json({ message: "Verification Code Not send!", error: tokenSendToMail.error })
+    }
+
+    user.verificationCode = token;
+    user.verifiicationCodeExpiry = expiry;
+
+    await user.save();
+
+
+    return res.json({
+      message: "Verification email sent successfully"
+    });
+
+  } catch (error) {
+
+    return res.status(500).json({
+      message: "Error sending verification email",
+      error: error.message
+    });
+
+  }
+};
 
 
 
@@ -138,7 +200,14 @@ const login = async (req, res) => {
 
     return res.status(200).json({
       message: "Login successfully",
-      user: existedUser
+      user: {
+        firstName: existedUser.firstName,
+        lastName: existedUser.lastName,
+        email: existedUser.email,
+        role: existedUser.role,
+        verified: true,
+        loggedIn: true
+      }
     })
 
   } catch (error) {
@@ -191,4 +260,4 @@ const me = async (req, res) => {
 
 
 
-module.exports = { signup, verifyMail, login, me, logout }
+module.exports = { signup, verifyMail, resendMail, login, me, logout }
