@@ -1,21 +1,19 @@
 import React, { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import loginBanner from "../assets/loginBanner.png";
 import { Toaster } from "react-hot-toast";
+import { useSelector } from "react-redux";
 function LoginLayout() {
   const navigate = useNavigate();
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
 
-    if (!storedUser) {
-      navigate("/signup");
-      return;
-    }
-  }, [navigate]);
+  const user = useSelector((state) => state.auth.user);
+
+  if (user && user.loggedIn) {
+    return <Navigate to="/home" replace />;
+  }
+
   return (
     <div className="w-full min-h-screen flex">
-      <Toaster position="top-right" />
-      {/* Banner */}
       <div className="hidden md:flex md:w-1/2">
         <img
           src={loginBanner}

@@ -11,53 +11,60 @@ const signup = async (req, res) => {
 
     if (!email || !password || !firstName) {
       return res.status(400).json({
-        message: "credentials are Required"
-      })
+        message: "First name, email and password are required",
+      });
     }
-    const existedUser = await User.findOne({ email }).select("-password");
+
+    const existedUser = await User.findOne({ email });
 
     if (existedUser) {
       return res.status(409).json({
-        message: "User already Existed"
-      })
+        message: "User already exists with this email",
+      });
     }
 
     const { token, expiry } = verificationToken();
 
     const tokenSendToMail = await VerificationCodeSend(token, email);
 
-    if (tokenSendToMail.status != 200) {
-      return res.status(500).json({ message: "Verification Code Not send!", error: tokenSendToMail.error })
+    if (tokenSendToMail.status !== 200) {
+      return res.status(500).json({
+        message: "Failed to send verification email",
+        error: tokenSendToMail.error,
+      });
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({
-      firstName, lastName, email, password: hashPassword, verificationCode: token, verifiicationCodeExpiry: expiry, role
-    })
+      firstName,
+      lastName,
+      email,
+      password: hashPassword,
+      verificationCode: token,
+      verifiicationCodeExpiry: expiry,
+      role,
+    });
 
     await newUser.save();
 
-
     return res.status(201).json({
-      message: "User Created Sucessfully!",
+      message: "User created successfully. Please verify your email.",
       user: {
         firstName: newUser.firstName,
         lastName: newUser.lastName,
         email: newUser.email,
         role: newUser.role,
-        verified: newUser.verified
-      }
-
-    })
+        verified: newUser.verified,
+      },
+    });
   } catch (error) {
-    return res.json({
-      message: "Error comes in Signup",
-      error
-    })
+    return res.status(500).json({
+      message: "Something went wrong during signup",
+      error: error.message,
+    });
   }
-}
-
+};
 
 const verifyMail = async (req, res) => {
 

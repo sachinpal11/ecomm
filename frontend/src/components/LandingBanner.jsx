@@ -1,16 +1,28 @@
 import React from "react";
 import flxoraVideo from "../assets/flxora_video1.mp4";
+import { Link } from "react-router-dom";
+
 function LandingBanner() {
   return (
     <div className="w-full relative h-screen bg-neutral-300 overflow-hidden">
-      <div className="absolute w-full h-full bg-neutral-900/70"></div>
+      {/* Overlay */}
+      <div className="absolute inset-0 z-5 bg-linear-to-b from-neutral-900/60 to-black">
+        <Link
+          to="/new-collection"
+          className="absolute text-5xl bottom-20 right-20 text-white"
+        >
+          SHOP NOW
+        </Link>
+      </div>
+
+      {/* Background video */}
       <video
-        className="w-full object-cover h-full"
+        className="w-full h-full object-cover pointer-events-none"
         loop
         autoPlay
         muted
         src={flxoraVideo}
-      ></video>
+      />
     </div>
   );
 }

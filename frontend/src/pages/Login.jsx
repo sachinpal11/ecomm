@@ -6,7 +6,7 @@ import Logo from "../assets/flxora_black.png";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../api/auth/authThunk";
 
@@ -18,6 +18,7 @@ const loginSchema = z.object({
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -35,16 +36,23 @@ function Login() {
     try {
       const res = await dispatch(login(data)).unwrap();
 
-      toast.success("Login successful!", { id: toastId });
+      toast.success(res.message || "Login successful!", {
+        id: toastId,
+      });
 
       navigate("/");
     } catch (error) {
-      toast.error(error?.message || "Login failed", { id: toastId });
+      console.log("Login error:", error);
+
+      const message = error?.message || "Login failed. Please try again.";
+
+      toast.error(message, { id: toastId });
     }
   };
 
   return (
     <div className="w-full md:w-3/4 -mt-10 flex flex-col items-center justify-center px-6">
+      {/* Logo */}
       <div className="flex justify-center -mt-10 mb-6">
         <img src={Logo} className="w-50 -my-20" alt="FLXORA" />
       </div>
@@ -53,13 +61,17 @@ function Login() {
         Login to your Account
       </h1>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-4 w-full max-w-md"
+      >
         {/* Email */}
         <div>
           <div className="relative">
             <Mail className="absolute left-3 top-3.5 text-gray-400" size={18} />
 
             <input
+              type="email"
               {...register("email")}
               placeholder="Email"
               className="w-full border rounded-full pl-10 pr-4 py-3 outline-none focus:border-black"
@@ -108,12 +120,10 @@ function Login() {
         </button>
       </form>
 
+      {/* Signup */}
       <p className="text-center text-sm text-gray-500 mt-6">
         Don't have an account?{" "}
-        <Link
-          to="/signup"
-          className="text-black font-medium cursor-pointer hover:underline"
-        >
+        <Link to="/signup" className="text-black font-medium hover:underline">
           Signup
         </Link>
       </p>

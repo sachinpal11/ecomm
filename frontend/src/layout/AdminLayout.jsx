@@ -1,13 +1,13 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import Navbar from "../components/Navbar";
+import Navbar from "../components/admin/AdminNavbar";
 import Footer from "../components/Footer";
 import { useSelector } from "react-redux";
 
-function LandingPageLayout() {
+function AdminLayout() {
   const user = useSelector((state) => state.auth.user);
 
-  if (user && user.loggedIn) {
+  if (user && !user.role === "admin") {
     return <Navigate to="/home" replace />;
   }
   return (
@@ -19,4 +19,4 @@ function LandingPageLayout() {
   );
 }
 
-export default LandingPageLayout;
+export default AdminLayout;

@@ -10,24 +10,37 @@ import Home from "./pages/Home";
 import Signup from "./pages/SignUp";
 import VerificationLink from "./pages/VerificationLink";
 import ProtectedRoute from "./protectedRoute/ProtectedRoute";
+import ProtectLayout from "./layout/ProtectLayout";
+import { Toaster } from "react-hot-toast";
+import NewCollection from "./components/NewCollection";
+import AdminLayout from "./layout/AdminLayout";
+import AddProduct from "./components/admin/AllProduct";
 
 function App() {
   return (
-    <Routes>
-      <Route element={<LoginLayout />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/verify-link/:token" element={<VerificationLink />} />
-      </Route>
+    <>
+      <Toaster position="top-right" />
+      <Routes>
+        <Route element={<LoginLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/verify-link/:token" element={<VerificationLink />} />
+        </Route>
 
-      <Route element={<LandingPageLayout />}>
-        <Route path="/" element={<LandingPage />} />
-      </Route>
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="products" element={<AddProduct />} />
+        </Route>
 
-      <Route element={<ProtectedRoute />}>
-        <Route path="/home" element={<Home />} />
-      </Route>
-    </Routes>
+        <Route element={<LandingPageLayout />}>
+          <Route path="/" element={<LandingPage />} />
+        </Route>
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/new-collection" element={<NewCollection />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
 

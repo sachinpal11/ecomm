@@ -7,6 +7,10 @@ function checkLogin() {
 
   useEffect(() => {
     const storedUser = window.localStorage.getItem("user");
+    if (!storedUser) {
+      setLoggedIn(false);
+      return;
+    }
     const user = JSON.parse(storedUser);
     const login = user.loggedIn;
     if (!user) {

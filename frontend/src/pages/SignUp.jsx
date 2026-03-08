@@ -6,17 +6,17 @@ import Logo from "../assets/flxora_black.png";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { Mail, Lock, User, Eye, EyeOff } from "lucide-react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { signup } from "../api/auth/authThunk";
 
 const signupSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
-
   lastName: z.string().optional(),
-
-  email: z.string().min(1, "Email is required").email("Invalid email address"),
-
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -27,7 +27,9 @@ const signupSchema = z.object({
 
 function Signup() {
   const [showPassword, setShowPassword] = useState(false);
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -37,24 +39,33 @@ function Signup() {
     resolver: zodResolver(signupSchema),
   });
 
-  const navigate = useNavigate();
-
   const onSubmit = async (data) => {
     const toastId = toast.loading("Creating your account...");
 
     try {
       const res = await dispatch(signup(data)).unwrap();
 
-      toast.success("Signup successful! Please verify your email.", {
-        id: toastId,
-      });
+      toast.success(
+        res.message || "Signup successful! Please verify your email.",
+        {
+          id: toastId,
+        },
+      );
+
+      navigate("/verify-link");
     } catch (error) {
-      toast.error(error?.message || "Signup failed", { id: toastId });
+      console.log("Signup error:", error);
+
+      // error here is the rejectWithValue payload
+      const message = error?.message || "Signup failed. Please try again.";
+
+      toast.error(message, { id: toastId });
     }
   };
 
   return (
     <div className="w-full md:w-3/4 -mt-10 flex flex-col items-center justify-center px-6">
+      {/* Logo */}
       <div className="flex justify-center -mt-10 mb-6">
         <img src={Logo} className="w-50 -my-20" alt="FLXORA" />
       </div>
@@ -64,10 +75,8 @@ function Signup() {
       </h1>
 
       <form
-        onSubmit={handleSubmit(onSubmit, (errors) =>
-          console.log("ERRORS:", errors),
-        )}
-        className="flex flex-col gap-4"
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex flex-col gap-4 w-full max-w-md"
       >
         {/* First Name */}
         <div>
@@ -104,6 +113,7 @@ function Signup() {
           <div className="relative">
             <Mail className="absolute left-3 top-3.5 text-gray-400" size={18} />
             <input
+              type="email"
               {...register("email")}
               placeholder="Email"
               className="w-full border rounded-full pl-10 pr-4 py-3 outline-none focus:border-black"
@@ -147,7 +157,9 @@ function Signup() {
         <div className="text-sm text-gray-500">
           <p>Password must contain:</p>
           <p>✔ Minimum 8 characters</p>
-          <p>✔ Uppercase letter, number & special character</p>
+          <p>✔ One uppercase letter</p>
+          <p>✔ One number</p>
+          <p>✔ One special character</p>
         </div>
 
         {/* Button */}
@@ -159,12 +171,10 @@ function Signup() {
         </button>
       </form>
 
+      {/* Login */}
       <p className="text-center text-sm text-gray-500 mt-6">
         Already have an account?{" "}
-        <Link
-          to="/login"
-          className="text-black font-medium cursor-pointer hover:underline"
-        >
+        <Link to="/login" className="text-black font-medium hover:underline">
           Login
         </Link>
       </p>
