@@ -68,6 +68,10 @@ const getSingleProduct = async (req, res) => {
 
 const createProduct = async (req, res) => {
   try {
+
+    console.log("BODY:", req.body);
+    console.log("FILES:", req.files);
+
     const { name, description, price, discountPrice, category, totalStock, variants } = req.body;
 
     const images = req.files;
@@ -85,7 +89,7 @@ const createProduct = async (req, res) => {
     }
 
 
-    const parsedVariants = JSON.parse(req.body.variants);
+    const parsedVariants = JSON.parse(variants);
 
 
     const uploadImages = await ImageStorage(images);

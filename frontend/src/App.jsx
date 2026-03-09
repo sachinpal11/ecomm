@@ -14,7 +14,8 @@ import ProtectLayout from "./layout/ProtectLayout";
 import { Toaster } from "react-hot-toast";
 import NewCollection from "./components/NewCollection";
 import AdminLayout from "./layout/AdminLayout";
-import AddProduct from "./components/admin/AllProduct";
+import AddProduct from "./components/admin/AddProduct";
+import AllProduct from "./components/admin/AllProduct";
 
 function App() {
   return (
@@ -28,7 +29,8 @@ function App() {
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
-          <Route path="products" element={<AddProduct />} />
+          <Route path="products" element={<AllProduct />} />
+          <Route path="add-product" element={<AddProduct />} />
         </Route>
 
         <Route element={<LandingPageLayout />}>
