@@ -63,10 +63,13 @@ function VerificationLink() {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center px-6">
-      <img src={Logo} className="w-40 -mb-10 mt-20" alt="FLXORA" />
+    <div className="w-full flex justify-center px-6">
+      <div className="w-full max-w-md flex flex-col items-center">
+        <div className="mb-8">
+          <img src={Logo} className="w-48 h-auto" alt="FLXORA" />
+        </div>
 
-      <div className="bg-white shadow-lg rounded-xl p-10 text-center max-w-md w-full">
+        <div className="bg-white shadow-lg rounded-xl p-10 text-center w-full">
         {loading && (
           <>
             <h2 className="text-xl font-semibold mb-4">Verifying your email</h2>
@@ -106,6 +109,7 @@ function VerificationLink() {
         )}
       </div>
     </div>
+  </div>
   );
 }
 

@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import Signup from "./pages/SignUp";
 import VerificationLink from "./pages/VerificationLink";
+import ResetPassword from "./pages/ResetPassword";
 import ProtectedRoute from "./protectedRoute/ProtectedRoute";
 import ProtectLayout from "./layout/ProtectLayout";
 import { Toaster } from "react-hot-toast";
@@ -26,6 +27,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/verify-link/:token" element={<VerificationLink />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>

@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import Logo from "../assets/flxora.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { X, ShoppingCart } from "lucide-react";
 import tshirt from "../assets/tshirt1_1.png";
 import { motion } from "framer-motion";
 import checkLogin from "../utils/checkLogin";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../api/auth/authAPI";
+import { logout } from "../api/auth/authSlice";
+import toast from "react-hot-toast";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -12,6 +16,20 @@ function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   const isLoggedIn = checkLogin();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+      dispatch(logout());
+      toast.success("Logged out successfully");
+      navigate("/login");
+      setMenuOpen(false);
+    } catch (error) {
+      toast.error("Logout failed. Please try again.");
+    }
+  };
 
   const NavUrl = [
     { title: "WOMEN", url: "/women", image: tshirt },
@@ -90,7 +108,7 @@ function Navbar() {
         </div>
 
         {/* Menu Content */}
-        <div className="flex flex-col justify-center items-center md:items-start md:pl-32 gap-12 h-[80%] text-4xl md:text-6xl font-light tracking-wide">
+        <div className="flex flex-col justify-center items-center md:items-start md:pl-32 gap-8 md:gap-12 h-[80%] text-2xl md:text-4xl lg:text-5xl font-light tracking-wide">
           {NavUrl.map((item, index) => (
             <Link
               key={index}
@@ -104,22 +122,34 @@ function Navbar() {
             </Link>
           ))}
 
-          {/* Cart / Signup inside menu */}
-          {isLoggedIn ? (
-            <Link
-              to="/cart"
-              className="flex items-center gap-3 text-4xl md:text-6xl mt-6 hover:text-neutral-400"
-            >
-              CART
-            </Link>
-          ) : (
-            <Link
-              to="/signup"
-              className="text-4xl md:text-6xl border border-white px-6 py-2 mt-6 hover:bg-white hover:text-black transition"
-            >
-              SIGN UP
-            </Link>
-          )}
+          {/* Action Links inside menu */}
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 md:gap-10 mt-8">
+            {isLoggedIn ? (
+              <>
+                <Link
+                  to="/cart"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-2xl md:text-3xl lg:text-4xl text-neutral-400 hover:text-white transition"
+                >
+                  CART
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="text-2xl md:text-3xl lg:text-4xl text-neutral-400 hover:text-red-500 transition text-left"
+                >
+                  LOGOUT
+                </button>
+              </>
+            ) : (
+              <Link
+                to="/signup"
+                onClick={() => setMenuOpen(false)}
+                className="text-3xl md:text-4xl lg:text-5xl border border-white px-6 py-2 hover:bg-white hover:text-black transition"
+              >
+                SIGN UP
+              </Link>
+            )}
+          </div>
         </div>
       </motion.div>
     </>

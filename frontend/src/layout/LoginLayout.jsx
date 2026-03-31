@@ -14,7 +14,7 @@ function LoginLayout() {
 
   return (
     <div className="w-full min-h-screen flex">
-      <div className="hidden md:flex md:w-1/2">
+      <div className="hidden h-screen overflow-hidden md:flex md:w-1/2">
         <img
           src={loginBanner}
           alt="flxora_login_banner"
@@ -23,7 +23,7 @@ function LoginLayout() {
       </div>
 
       {/* Auth Section */}
-      <div className="w-full md:w-1/2 flex items-center justify-center px-6">
+      <div className="w-full md:w-1/2 h-auto overflow-auto flex items-center justify-center px-6">
         <Outlet />
       </div>
     </div>
