@@ -51,10 +51,10 @@ function Login() {
   };
 
   return (
-    <div className="w-full md:w-3/4 -mt-10 flex flex-col items-center justify-center px-6">
+    <div className="w-full max-w-md flex flex-col items-center justify-center px-6 py-12">
       {/* Logo */}
-      <div className="flex justify-center -mt-10 mb-6">
-        <img src={Logo} className="w-50 -my-20" alt="FLXORA" />
+      <div className="h-30">
+        <img src={Logo} className="w-48 h-auto" alt="FLXORA" />
       </div>
 
       <h1 className="text-2xl font-semibold mb-6 text-center">
@@ -125,6 +125,14 @@ function Login() {
         Don't have an account?{" "}
         <Link to="/signup" className="text-black font-medium hover:underline">
           Signup
+        </Link>
+      </p>
+
+      {/* Reset Password */}
+      <p className="text-center text-sm text-gray-500 mt-2">
+        Forgot Password?{" "}
+        <Link to="/reset-password" className="text-black font-medium hover:underline">
+          Reset here
         </Link>
       </p>
     </div>

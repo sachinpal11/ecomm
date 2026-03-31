@@ -268,3 +268,27 @@ const me = async (req, res) => {
 
 
 module.exports = { signup, verifyMail, resendMail, login, me, logout }
+const resetPassword = async (req, res) => {
+  try {
+    const { email, oldPassword, newPassword } = req.body;
+    if (!email || !oldPassword || !newPassword) {
+      return res.status(400).json({ message: 'Email, old password, and new password are required' });
+    }
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Old password is incorrect' });
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+    await user.save();
+    return res.status(200).json({ message: 'Password reset successfully' });
+  } catch (error) {
+    return res.status(500).json({ message: 'Error resetting password', error: error.message });
+  }
+};
+
+module.exports = { signup, verifyMail, resendMail, login, me, logout, resetPassword };

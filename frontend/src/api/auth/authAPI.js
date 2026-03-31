@@ -19,3 +19,12 @@ export const loginUser = async (data) => {
   const response = await apiClient.post("/auth/login", data);
   return response.data;
 }
+export const resetPassword = async (data) => {
+  const response = await apiClient.post('/auth/reset-password', data);
+  return response.data;
+};
+
+export const logoutUser = async () => {
+  const response = await apiClient.get('/auth/logout');
+  return response.data;
+};
