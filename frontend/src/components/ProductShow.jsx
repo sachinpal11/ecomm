@@ -11,7 +11,7 @@ function ProductShow({ item }) {
       onClick={handleClick}
       className="group cursor-pointer min-w-[280px] md:min-w-0"
     >
-      <div className="relative bg-[#f6f6f6] overflow-hidden h-[420px]">
+      <div className="relative bg-[#f6f6f6] overflow-hidden aspect-[4/5] w-full">
         <span className="absolute top-3 left-3 text-xs font-medium z-10">
           NEW
         </span>

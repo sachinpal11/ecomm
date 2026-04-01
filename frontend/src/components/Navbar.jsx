@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Logo from "../assets/flxora.png";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { X, ShoppingCart } from "lucide-react";
 import tshirt from "../assets/tshirt1_1.png";
 import { motion } from "framer-motion";
@@ -18,6 +18,8 @@ function Navbar() {
   const isLoggedIn = checkLogin();
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
 
   const handleLogout = async () => {
     try {
@@ -52,18 +54,18 @@ function Navbar() {
       {/* ================= NAVBAR ================= */}
       <div
         className={`fixed top-0 left-0 w-full h-20 flex items-center justify-center z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-black/40 backdrop-blur-xl border-b border-neutral-800"
+          scrolled || !isHomePage
+            ? "bg-black backdrop-blur-xl border-b border-neutral-800"
             : "bg-transparent"
         }`}
       >
         {/* Logo */}
         <Link to="/">
-          <img src={Logo} alt="logo" className="w-[150px] md:w-[170px]" />
+          <img src={Logo} alt="logo" className="w-[130px] sm:w-[150px] md:w-[170px]" />
         </Link>
 
         {/* Right Section */}
-        <div className="absolute right-6 md:right-10 flex items-center gap-6">
+        <div className="absolute right-6 md:right-10 flex items-center gap-4 md:gap-6">
           {isLoggedIn ? (
             <Link
               to="/cart"
@@ -74,7 +76,7 @@ function Navbar() {
           ) : (
             <Link
               to="/signup"
-              className="text-white border border-white px-4 py-1.5 rounded-md hover:bg-white hover:text-black transition"
+              className="hidden md:block text-white border border-white px-4 py-1.5 rounded-md hover:bg-white hover:text-black transition"
             >
               Sign Up
             </Link>

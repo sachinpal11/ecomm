@@ -266,8 +266,6 @@ const me = async (req, res) => {
 
 
 
-
-module.exports = { signup, verifyMail, resendMail, login, me, logout }
 const resetPassword = async (req, res) => {
   try {
     const { email, oldPassword, newPassword } = req.body;
