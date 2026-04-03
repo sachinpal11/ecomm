@@ -9,26 +9,32 @@ import { useDispatch } from "react-redux";
 import { logoutUser } from "../api/auth/authAPI";
 import { logout } from "../api/auth/authSlice";
 import toast from "react-hot-toast";
+import Loading from "./Loading";
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoverImage, setHoverImage] = useState(null);
   const [scrolled, setScrolled] = useState(false);
+  const [isLoading,setLoading] = useState(false);
 
   const isLoggedIn = checkLogin();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const isHomePage = location.pathname === "/";
+  const isHomePage =
+  location.pathname === "/" || location.pathname === "/home";
 
   const handleLogout = async () => {
     try {
+      setLoading(true);
       await logoutUser();
       dispatch(logout());
       toast.success("Logged out successfully");
+      setLoading(false);
       navigate("/login");
       setMenuOpen(false);
     } catch (error) {
+      setLoading(false);
       toast.error("Logout failed. Please try again.");
     }
   };
@@ -54,11 +60,14 @@ function Navbar() {
       {/* ================= NAVBAR ================= */}
       <div
         className={`fixed top-0 left-0 w-full h-20 flex items-center justify-center z-50 transition-all duration-300 ${
-          scrolled || !isHomePage
-            ? "bg-black backdrop-blur-xl border-b border-neutral-800"
-            : "bg-transparent"
-        }`}
+  !isHomePage
+    ? "bg-black backdrop-blur-xl border-b border-neutral-800"
+    : scrolled
+    ? "bg-black/95 backdrop-blur-xl border-b border-neutral-800"
+    : "bg-transparent"
+}`}
       >
+        {isLoading && <Loading/>}
         {/* Logo */}
         <Link to="/">
           <img src={Logo} alt="logo" className="w-[130px] sm:w-[150px] md:w-[170px]" />

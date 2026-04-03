@@ -13,7 +13,7 @@ function LoginLayout() {
   }
 
   return (
-    <div className="w-full min-h-screen flex">
+    <div className="w-full overflow-hidden h-screen flex">
       <div className="hidden h-screen overflow-hidden md:flex md:w-1/2">
         <img
           src={loginBanner}

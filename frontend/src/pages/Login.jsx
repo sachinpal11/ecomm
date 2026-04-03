@@ -18,7 +18,7 @@ const loginSchema = z.object({
 
 function Login() {
   const [showPassword, setShowPassword] = useState(false);
-
+  const[disable,setDisable] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -34,7 +34,9 @@ function Login() {
     const toastId = toast.loading("Logging you in...");
 
     try {
+      setDisable(true);
       const res = await dispatch(login(data)).unwrap();
+      setDisable(false);
 
       toast.success(res.message || "Login successful!", {
         id: toastId,
@@ -43,7 +45,7 @@ function Login() {
       navigate("/");
     } catch (error) {
       console.log("Login error:", error);
-
+      setDisable(false);
       const message = error?.message || "Login failed. Please try again.";
 
       toast.error(message, { id: toastId });
@@ -114,6 +116,7 @@ function Login() {
         {/* Button */}
         <button
           type="submit"
+          disabled={disable}
           className="bg-black text-white py-3 rounded-full mt-2 hover:bg-neutral-800 transition"
         >
           Login
